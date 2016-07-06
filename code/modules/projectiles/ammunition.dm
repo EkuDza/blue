@@ -10,7 +10,7 @@
 	var/caliber = ""					//Which kind of guns it can be loaded into
 	var/projectile_type					//The bullet type to create when New() is called
 	var/obj/item/projectile/BB = null	//The loaded bullet - make it so that the projectiles are created only when needed?
-	var/spent_icon = null
+	var/spent_icon = "s-casing-spent"
 
 /obj/item/ammo_casing/New()
 	..()
@@ -48,7 +48,7 @@
 		icon_state = spent_icon
 
 /obj/item/ammo_casing/examine(mob/user)
-	..()
+	.=..()
 	if (!BB)
 		user << "This one is spent."
 
@@ -134,7 +134,7 @@
 		icon_state = (new_state)? new_state : initial(icon_state)
 
 /obj/item/ammo_magazine/examine(mob/user)
-	..()
+	.=..()
 	user << "There [(stored_ammo.len == 1)? "is" : "are"] [stored_ammo.len] round\s left!"
 
 //magazine icon state caching

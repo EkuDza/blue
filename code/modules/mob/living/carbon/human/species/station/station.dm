@@ -74,6 +74,38 @@
 		else
 			return 'icons/mob/hidden.dmi'
 
+/datum/species/human/cursed
+	name = "Cursed huamn"
+	name_plural = "Humans"
+	language = "Sol Common"
+	primitive_form = ""
+	flags = HAS_SKIN_TONE | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR | IS_RESTRICTED
+
+/datum/species/human/cursed/handle_environment_special(var/mob/living/carbon/human/H)
+	var/is_skeleton = (SKELETON in H.mutations)
+	var/light_amount = 0
+	if(isturf(H.loc))
+		var/turf/T = H.loc
+		var/atom/movable/lighting_overlay/L = locate(/atom/movable/lighting_overlay) in T
+		if(L)
+			light_amount = L.lum_r + L.lum_g + L.lum_b //hardcapped so it's not abused by having a ton of flashlights
+		else
+			light_amount =  10
+	if(light_amount > 0.9)
+		if(is_skeleton)
+			H.mutations -= SKELETON
+			H.update_hair(0)
+			H.update_body()
+	else
+		if(!is_skeleton)
+			H.mutations |= SKELETON
+			H.update_hair(0)
+			H.update_body()
+
+/datum/species/human/cursed/get_bodytype()
+	return "Human"
+
+
 /datum/species/unathi
 	name = "Unathi"
 	name_plural = "Unathi"
@@ -158,7 +190,7 @@
 	tail_animation = 'icons/mob/species/tajaran/tail.dmi'
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/claws, /datum/unarmed_attack/bite/sharp)
 	darksight = 8
-	slowdown = -0.5
+	slowdown = -0.75
 	brute_mod = 1.2
 	gluttonous = 1
 
@@ -411,3 +443,61 @@
 		H.h_style = ""
 		spawn(100)
 			if(H) H.update_hair()
+
+//Human Subspecies//
+
+datum/species/human/vatgrown
+	name = "Vat-grown Human"
+	name_plural = "Vat-grown Humans"
+	blurb = "With cloning on the forefront of human scientific advancement, cheap mass production \
+	of bodies is a very real and rather ethically grey industry. Vat-grown humans tend to be paler than \
+	baseline, with no appendix and fewer inherited genetic disabilities, but a weakened metabolism."
+	icobase = 'icons/mob/human_races/r_vatgrown.dmi'
+	allow_slim_fem = 1
+
+	flags = CAN_JOIN | HAS_UNDERWEAR | HAS_EYE_COLOR
+
+//	toxins_mod =   1.1
+	has_organ = list(
+		"heart" =    /obj/item/organ/heart,
+		"lungs" =    /obj/item/organ/lungs,
+		"liver" =    /obj/item/organ/liver,
+		"kidneys" =  /obj/item/organ/kidneys,
+		"brain" =    /obj/item/organ/brain,
+		"eyes" =     /obj/item/organ/eyes
+		)
+
+/datum/species/human/vatgrown/get_bodytype()
+	return "Human"
+
+
+datum/species/human/android
+	name = "Synth"
+	name_plural = "Synths"
+	blurb = "Synths are an artificial life forms designed to look and act like a human.\
+	Most of them have a lab-grown bodies of real flesh, bones, and organs in a way to copy Human physiology and mentality.\
+	Synths have blue biogel instead of blood and strong skeleton, what allows them to work in very hard conditions."
+	icobase = 'icons/mob/human_races/r_android.dmi'
+	deform = 'icons/mob/human_races/r_def_android.dmi'
+	allow_slim_fem = 1
+
+	taste_sensitivity = TASTE_DULL
+
+	flags = CAN_JOIN | NO_PAIN | NO_SCAN | HAS_UNDERWEAR | IS_WHITELISTED
+
+	blood_color = "#2299FC"
+	flesh_color = "#808D11"
+
+	brute_mod = 0.5
+	burn_mod = 1
+
+	has_organ = list(                                     //TODO: Positronic brain.
+		"liver" =    /obj/item/organ/liver,
+		"heart" =    /obj/item/organ/heart,
+		"lungs" =    /obj/item/organ/lungs,
+		"kidneys" =  /obj/item/organ/kidneys,
+		)
+
+/datum/species/human/android/get_bodytype()
+	return "Human"
+

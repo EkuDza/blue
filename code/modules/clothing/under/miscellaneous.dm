@@ -143,6 +143,12 @@
 	icon_state = "gentlesuit"
 	item_state = "gy_suit"
 
+/obj/item/clothing/under/maid
+	name = "maid uniform"
+	desc = "Traditional French maid uniform."
+	icon_state = "maid"
+	item_state = "chef"
+
 /obj/item/clothing/under/gimmick/rank/captain/suit
 	name = "captain's suit"
 	desc = "A green suit and yellow necktie. Exemplifies authority."
@@ -256,6 +262,12 @@
 	desc = "A small black dress with blue flames print on it."
 	icon_state = "dress_fire"
 	item_state = "waiter"
+
+/obj/item/clothing/under/dress/dress_blue
+	name = "blue dress"
+	desc = "A small blue dress."
+	icon_state = "bluedress"
+	item_state = "b_suit"
 
 /obj/item/clothing/under/dress/dress_green
 	name = "green dress"
@@ -532,6 +544,11 @@
 	name = "SID suit"
 	icon_state = "jane_sid_suit"
 	item_state = "suit-orange"
+
+/obj/item/clothing/under/french
+	name = "french suit"
+	icon_state = "french_suit"
+
 //Pants
 
 /obj/item/clothing/under/pants
@@ -598,6 +615,16 @@
 	icon_state = "jeans"
 	item_state = "jeansc"
 
+/obj/item/clothing/under/pants/sweaterj
+	name = "sweaterj"
+	desc = "Common space sweater."
+	icon_state = "sweaterj"
+
+/obj/item/clothing/under/pants/blouse
+	name = "blouse"
+	desc = "Common space blouse."
+	icon_state = "blouse"
+
 /obj/item/clothing/under/pants/khaki
 	name = "khaki pants"
 	desc = "A pair of dust beige khaki pants."
@@ -609,3 +636,44 @@
 	desc = "A pair of woodland camouflage pants. Probably not the best choice for a space station."
 	icon_state = "camopants"
 	item_state = "camopants"
+
+/obj/item/clothing/under/army
+	name = "battle dress uniform"
+	desc = "Standard-issue uniform of the NT colonial infantry"
+	icon_state = "armybd"
+	item_state = "armybd"
+
+//swimsuit
+/obj/item/clothing/under/swimsuit/
+	siemens_coefficient = 1
+	body_parts_covered = 0
+
+/obj/item/clothing/under/swimsuit/black
+	name = "black swimsuit"
+	desc = "An oldfashioned black swimsuit."
+	icon_state = "swim_black"
+	siemens_coefficient = 1
+
+/obj/item/clothing/under/swimsuit/blue
+	name = "blue swimsuit"
+	desc = "An oldfashioned blue swimsuit."
+	icon_state = "swim_blue"
+	siemens_coefficient = 1
+
+/obj/item/clothing/under/swimsuit/purple
+	name = "purple swimsuit"
+	desc = "An oldfashioned purple swimsuit."
+	icon_state = "swim_purp"
+	siemens_coefficient = 1
+
+/obj/item/clothing/under/swimsuit/green
+	name = "green swimsuit"
+	desc = "An oldfashioned green swimsuit."
+	icon_state = "swim_green"
+	siemens_coefficient = 1
+
+/obj/item/clothing/under/swimsuit/red
+	name = "red swimsuit"
+	desc = "An oldfashioned red swimsuit."
+	icon_state = "swim_red"
+	siemens_coefficient = 1

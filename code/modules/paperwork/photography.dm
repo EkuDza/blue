@@ -48,10 +48,10 @@ var/global/photo_count = 0
 			scribble = txt
 	..()
 
-/obj/item/weapon/photo/examine(mob/user)
-	if(in_range(user, src))
+/obj/item/weapon/photo/examine(mob/user, return_dist=1)
+	.=..()
+	if(.<=1)
 		show(user)
-		user << desc
 	else
 		user << "<span class='notice'>It is too far away.</span>"
 
@@ -77,6 +77,18 @@ var/global/photo_count = 0
 	add_fingerprint(usr)
 	return
 
+
+/obj/item/weapon/photo/custom/attack_self(mob/user as mob)
+	if(!img)
+		img = input("Set image for phote") as icon
+		var/icon/small_img = icon(img)
+		var/icon/ic = icon('icons/obj/items.dmi',"photo")
+		small_img.Scale(8, 8)
+		ic.Blend(small_img,ICON_OVERLAY, 10, 13)
+		icon = ic
+		name = input("Set name for phote", "New name", "photo") as text
+	else
+		return ..()
 
 /**************
 * photo album *

@@ -130,60 +130,212 @@
 
 	var/datum/custom_item/current_data
 	var/list/L
-	custom_items["d00kn00kem"] = list()
-	L = custom_items["d00kn00kem"]
+
+////D00k-N00kem////
+	L = list()
+
 	current_data = new()
 	current_data.assoc_key = "d00kn00kem"
 	current_data.character_name = "Natalia Lynn"
 	current_data.item_path = /obj/item/clothing/suit/storage/labcoat/augmented
-	current_data.req_access = 0
-	current_data.req_titles = list()
 	L |= current_data
-	current_data = null
-	
-	custom_items["wajtswv"] = list()
-	L = custom_items["wajtswv"]
+
+	current_data = new()
+	current_data.assoc_key = "d00kn00kem"
+	current_data.character_name = "Lorenzo Shere"
+	current_data.item_path = /obj/item/clothing/mask/D00k_N00kem
+	L |= current_data
+
+	current_data = new()
+	current_data.assoc_key = "d00kn00kem"
+	current_data.character_name = "Lorenzo Shere"
+	current_data.item_path = /obj/item/clothing/suit/storage/labcoat/long
+	L |= current_data
+
+	custom_items["d00kn00kem"] = L
+
+///Shamah///
+
+	L = list()
+
+	current_data = new()
+	current_data.assoc_key = "shamah"
+	current_data.character_name = "Niels Johansson"
+	current_data.item_path = /obj/item/clothing/suit/storage/toggle/bomber/niels
+	L |= current_data
+
+	custom_items["shamah"] = L
+
+///Lethal Ghost///
+
+	L = list()
+
+	current_data = new()
+	current_data.assoc_key = "lethalghost"
+	current_data.character_name = "April Evans"
+	current_data.item_path = /obj/item/weapon/photo/custom
+	L |= current_data
+
+	custom_items["lethalghost"] = L
+
+///Eclipse///
+
+	L = list()
+
+	current_data = new()
+	current_data.assoc_key = "solareclipse84"
+	current_data.req_titles = list("Head of Security")
+	current_data.character_name = "Dallas Brun"
+	current_data.item_path = /obj/item/clothing/suit/armor/hos/solyarkin
+	L |= current_data
+
+	current_data = new()
+	current_data.assoc_key = "solareclipse84"
+	current_data.req_titles = list("Head of Security")
+	current_data.character_name = "Dallas Brun"
+	current_data.item_path = /obj/item/clothing/under/rank/head_of_security/solyarkin
+	L |= current_data
+
+	current_data = new()
+	current_data.assoc_key = "solareclipse84"
+	current_data.req_titles = list("Head of Security")
+	current_data.character_name = "Dallas Brun"
+	current_data.item_path = /obj/item/clothing/head/helmet/HoS/solyarkin
+	L |= current_data
+
+	custom_items["solareclipse84"] = L
+
+////Wajtswv////
+
+	L = list()
+
 	current_data = new()
 	current_data.assoc_key = "wajtswv"
 	current_data.character_name = "William Stern"
 	current_data.item_path = /obj/item/clothing/under/russobluecamooutfit
-	current_data.req_access = 0
-	current_data.req_titles = list()
 	L |= current_data
-	current_data = null
-	
-	custom_items["tertiumdatur"] = list()
-	L = custom_items["tertiumdatur"]
+
+	custom_items["wajtswv"] = L
+
+////Tertiumdatur////
+
+	L = list()
+
+	current_data = new()
+	current_data.assoc_key = "tertiumdatur"
+	current_data.character_name = "Morlaiaschorr Ilirka"
+	current_data.item_desc = "A kit for modifying a voidsuit."
+	current_data.name = "Brown refitted modification of the ordinary atmospherics voidsuit made by Aether A&R. This one suitable only for tajaran."
+	current_data.item_path = /obj/item/device/kit/suit
+	current_data.req_titles = list("Atmospheric Technician", "Station Engineer")
+	current_data.kit_name = "dark brown voidsuit"
+	current_data.kit_desc = "Brown refitted version of the ordinary atmospherics voidsuit made by Aether A&R. This one suitable only for tajaran."
+	current_data.kit_icon = "rig-atmos_special"
+	L |= current_data
+
+	current_data = new()
+	current_data.assoc_key = "tertiumdatur"
+	current_data.character_name = "Morlaiaschorr Ilirka"
+	current_data.item_path = /obj/item/clothing/glasses/hud/engi
+	L |= current_data
+
 	current_data = new()
 	current_data.assoc_key = "tertiumdatur"
 	current_data.character_name = "Karamzi Khis'san"
 	current_data.item_path = /obj/item/clothing/head/floral_crown
-	current_data.req_access = 0
-	current_data.req_titles = list()
 	L |= current_data
-	current_data = null
-	
-	custom_items["tertiumdatur"] = list()
-	L = custom_items["tertiumdatur"]
+
 	current_data = new()
 	current_data.assoc_key = "tertiumdatur"
 	current_data.character_name = "Judas Insufledor"
-	current_data.item_path = /obj/item/clothing/head/sol_beret
-	current_data.req_access = 0
-	current_data.req_titles = list()
+	current_data.item_path = /obj/item/clothing/suit/storage/judas_jacket
 	L |= current_data
-	current_data = null
-	
-	custom_items["tertiumdatur"] = list()
-	L = custom_items["tertiumdatur"]
+
+	custom_items["tertiumdatur"] = L
+
+////Nikiss2000////
+	L = list()
+
 	current_data = new()
-	current_data.assoc_key = "tertiumdatur"
-	current_data.character_name = "Judas Insufledor"
-	current_data.item_path = /obj/item/clothing/suit/judas_jacket
-	current_data.req_access = 0
-	current_data.req_titles = list()
+	current_data.assoc_key = "nikiss2000"
+	current_data.character_name = "Hayaya Chatahahita"
+	current_data.item_path = /obj/item/clothing/head/vox_cap
 	L |= current_data
-	current_data = null
+
+	custom_items["nikiss2000"] = L
+
+////Subber////
+
+	L = list()
+
+	current_data = new()
+	current_data.assoc_key = "subber"
+	current_data.character_name = "Claire Sandford"
+	current_data.item_path = /obj/item/clothing/suit/ianshirt/ash
+	L|=current_data
+
+	current_data = new()
+	current_data.assoc_key = "subber"
+	current_data.character_name = "Claire Sandford"
+	current_data.item_path = /obj/item/toy/plushie/man
+	L|=current_data
+
+	custom_items["subber"] = L
+
+////MarcusAga////
+
+	L = list()
+
+	current_data = new()
+	current_data.assoc_key = "marcusaga"
+	current_data.character_name = "Bertrand Francois"
+	current_data.item_path = /obj/item/clothing/under/pants/sweaterj
+	L |= current_data
+
+	current_data = new()
+	current_data.assoc_key = "marcusaga"
+	current_data.character_name = "Bertrand Francois"
+	current_data.item_path = /obj/item/clothing/suit/storage/pullover
+	L |= current_data
+
+	current_data = new()
+	current_data.assoc_key = "marcusaga"
+	current_data.character_name = "Bertrand Francois"
+	current_data.item_path = /obj/item/clothing/shoes/red_boots
+	L |= current_data
+
+	current_data = new()
+	current_data.assoc_key = "marcusaga"
+	current_data.character_name = "Bertrand Francois"
+	current_data.item_path = /obj/item/device/pda/chrome
+	L |= current_data
+
+	custom_items["marcusaga"] = L
+
+////Affectuum////
+
+	L = list()
+
+	current_data = new()
+	current_data.assoc_key = "affectuum"
+	current_data.character_name = "Sasha Winter"
+	current_data.item_path = /obj/item/clothing/under/pants/blouse
+	L|=current_data
+
+	current_data = new()
+	current_data.assoc_key = "affectuum"
+	current_data.character_name = "Sasha Winter"
+	current_data.item_path = /obj/item/clothing/suit/storage/cardigan
+	L|=current_data
+
+	current_data = new()
+	current_data.assoc_key = "affectuum"
+	current_data.character_name = "Sasha Winter"
+	current_data.item_path = /obj/item/clothing/shoes/gazelle
+	L|=current_data
+
+	custom_items["affectuum"] = L
+
 	return 1
 
 //gets the relevant list for the key from the listlist if it exists, check to make sure they are meant to have it and then calls the giving function

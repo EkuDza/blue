@@ -127,7 +127,7 @@
 				observer.icon = client.prefs.preview_icon
 				observer.alpha = 127
 
-				if(client.prefs.random_name)
+				if(client.prefs.random_name || jobban_isbanned(src, "Name"))
 					client.prefs.real_name = random_name(client.prefs.gender)
 				observer.real_name = client.prefs.real_name
 				observer.name = observer.real_name
@@ -158,7 +158,10 @@
 				return
 
 			if(client.prefs.species != "Human" && !check_rights(R_ADMIN, 0))
-				if(!is_alien_whitelisted(src, client.prefs.species) && config.usealienwhitelist)
+				if(jobban_isbanned(src, client.prefs.species))
+					src << alert("You are currently banned from play [client.prefs.species].")
+					return 0
+				else if(!is_alien_whitelisted(src, client.prefs.species) && config.usealienwhitelist)
 					src << alert("You are currently not whitelisted to play [client.prefs.species].")
 					return 0
 
@@ -372,9 +375,6 @@
 
 		if(mind)
 			mind.active = 0					//we wish to transfer the key manually
-			if(mind.assigned_role == "Clown")				//give them a clownname if they are a clown
-				new_character.real_name = pick(clown_names)	//I hate this being here of all places but unfortunately dna is based on real_name!
-				new_character.rename_self("clown")
 			mind.original = new_character
 			mind.transfer_to(new_character)					//won't transfer key since the mind is not active
 

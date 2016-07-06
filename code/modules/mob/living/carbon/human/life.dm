@@ -1068,11 +1068,16 @@
 				ear_deaf = max(ear_deaf, 1)
 			else if(ear_deaf)			//deafness, heals slowly over time
 				ear_deaf = max(ear_deaf-1, 0)
-			else if(istype(l_ear, /obj/item/clothing/ears/earmuffs) || istype(r_ear, /obj/item/clothing/ears/earmuffs))	//resting your ears with earmuffs heals ear damage faster
-				ear_damage = max(ear_damage-0.15, 0)
-				ear_deaf = max(ear_deaf, 1)
+			else if(istype(l_ear, /obj/item/clothing/ears/earmuffs) || istype(r_ear, /obj/item/clothing/ears/earmuffs))
+				var/obj/item/clothing/ears/earmuffs/mp3/HeadPhone
+				if(istype(l_ear,/obj/item/clothing/ears/earmuffs/mp3))
+					HeadPhone = l_ear
+				if(!HeadPhone||(HeadPhone&&HeadPhone.up))
+					ear_damage = max(ear_damage-0.15, 0)
+					ear_deaf = max(ear_deaf, 1)
 			else if(ear_damage < 25)	//ear damage heals slowly under this threshold. otherwise you'll need earmuffs
 				ear_damage = max(ear_damage-0.05, 0)
+
 
 			//Resting
 			if(resting)
@@ -1270,7 +1275,7 @@
 
 			if(healths)
 				if (analgesic > 100)
-					healths.icon_state = "health_health_numb"
+					healths.icon_state = "health_numb"
 				else
 					switch(hal_screwyhud)
 						if(1)	healths.icon_state = "health6"
@@ -1352,8 +1357,8 @@
 						else
 							bodytemp.icon_state = "temp0"
 			if(blind)
-				if(blinded)		blind.layer = 18
-				else			blind.layer = 0
+				if(blinded)		blind.alpha = 255
+				else			blind.alpha = 0
 
 			if(disabilities & NEARSIGHTED)	//this looks meh but saves a lot of memory by not requiring to add var/prescription
 				if(glasses)					//to every /obj/item

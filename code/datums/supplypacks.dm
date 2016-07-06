@@ -406,8 +406,8 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 /datum/supply_packs/bloodpack
 	name = "BloodPack crate"
 	contains = list(/obj/item/weapon/storage/box/bloodpacks,
-                    /obj/item/weapon/storage/box/bloodpacks,
-                    /obj/item/weapon/storage/box/bloodpacks)
+					/obj/item/weapon/storage/box/bloodpacks,
+					/obj/item/weapon/storage/box/bloodpacks)
 	cost = 10
 	containertype = /obj/structure/closet/crate/medical
 	containername = "BloodPack crate"
@@ -416,8 +416,8 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 /datum/supply_packs/bodybag
 	name = "Body bag crate"
 	contains = list(/obj/item/weapon/storage/box/bodybags,
-                    /obj/item/weapon/storage/box/bodybags,
-                    /obj/item/weapon/storage/box/bodybags)
+					/obj/item/weapon/storage/box/bodybags,
+					/obj/item/weapon/storage/box/bodybags)
 	cost = 10
 	containertype = /obj/structure/closet/crate/medical
 	containername = "Body bag crate"
@@ -426,7 +426,7 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 /datum/supply_packs/cryobag
 	name = "Statis bag crate"
 	contains = list(/obj/item/bodybag/cryobag,
-				    /obj/item/bodybag/cryobag,
+					/obj/item/bodybag/cryobag,
 	    			/obj/item/bodybag/cryobag)
 	cost = 50
 	containertype = /obj/structure/closet/crate/medical
@@ -926,7 +926,7 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 	containername = "Security barrier crate"
 	group = "Security"
 
-/datum/supply_packs/securitybarriers
+/datum/supply_packs/wallshieldgen
 	name = "Wall shield Generators"
 	contains = list(/obj/machinery/shieldwallgen,
 					/obj/machinery/shieldwallgen,
@@ -1075,7 +1075,7 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 
 /datum/supply_packs/randomised/costume
 	num_contained = 2
-	contains = list(/obj/item/clothing/suit/pirate,
+	contains = list(/obj/item/clothing/suit/storage/pirate,
 					/obj/item/clothing/suit/judgerobe,
 					/obj/item/clothing/suit/wcoat,
 					/obj/item/clothing/suit/hastur,
@@ -1167,14 +1167,16 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 	access = access_ce
 
 
-/* /datum/supply_packs/smsmall // Currently nonfunctional, waiting on virgil
+/*
+ /datum/supply_packs/smsmall // Currently nonfunctional, waiting on virgil
 	name = "Supermatter Shard"
 	contains = list(/obj/machinery/power/supermatter/shard)
 	cost = 25
 	containertype = /obj/structure/closet/crate/secure/phoron
 	containername = "Supermatter shard crate (CAUTION)"
 	access = access_ce
-	group = "Engineering" */
+	group = "Engineering"
+*/
 
 /datum/supply_packs/eftpos
 	contains = list(/obj/item/device/eftpos)
@@ -1454,10 +1456,10 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 /datum/supply_packs/knight_armor/knight/red
 	contains = list(/obj/item/clothing/suit/armor/knight/red,
 					/obj/item/clothing/head/helmet/knight/red)
-	name = "Knight Armor Pack"
+	name = "Knight Armor Pack, Red"
 	cost = 60
 	containertype = /obj/structure/closet/crate/secure
-	containername = "Knight Armor, Red"
+	containername = "Knight Armor"
 	access = access_theatre
 	group = "Miscellaneous"
 
@@ -1474,7 +1476,7 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 /datum/supply_packs/knight_armor/knight/green
 	contains = list(/obj/item/clothing/suit/armor/knight/green,
 					/obj/item/clothing/head/helmet/knight/green)
-	name = "Knight Armor Pack,Green"
+	name = "Knight Armor Pack, Green"
 	cost = 60
 	containertype = /obj/structure/closet/crate/secure
 	containername = "Knight Armor"
@@ -1556,35 +1558,91 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 					/obj/item/weapon/stock_parts/subspace/crystal,
 					/obj/item/weapon/storage/toolbox/electrical)
 
-/datum/supply_packs/randomised/exosuit_mod
-	num_contained = 1
+/datum/supply_packs/exosuit_mod
 	contains = list(
-		/obj/item/device/kit/paint/ripley,
-		/obj/item/device/kit/paint/ripley/death,
-		/obj/item/device/kit/paint/ripley/flames_red,
-		/obj/item/device/kit/paint/ripley/flames_blue
+		/obj/item/device/kit/paint/ripley
 		)
-	name = "Random APLU modkit"
-	cost = 200
+	name = "APLU classic modkit"
+	cost = 50
 	containertype = /obj/structure/closet/crate
 	containername = "heavy crate"
 	group = "Miscellaneous"
 
-/datum/supply_packs/randomised/exosuit_mod/durand
+/datum/supply_packs/exosuit_mod/apludeath
 	contains = list(
-		/obj/item/device/kit/paint/durand,
-		/obj/item/device/kit/paint/durand/seraph,
+		/obj/item/device/kit/paint/ripley/death
+		)
+	name = "APLU death modkit"
+	cost = 60
+	containertype = /obj/structure/closet/crate
+	containername = "heavy crate"
+	group = "Miscellaneous"
+
+
+/datum/supply_packs/exosuit_mod/aplured
+	contains = list(
+		/obj/item/device/kit/paint/ripley/flames_red
+		)
+	name = "APLU flames red modkit"
+	cost = 60
+	containertype = /obj/structure/closet/crate
+	containername = "heavy crate"
+	group = "Miscellaneous"
+
+
+/datum/supply_packs/exosuit_mod/aplublue
+	contains = list(
+		/obj/item/device/kit/paint/ripley/flames_blue
+		)
+	name = "APLU flames blue modkit"
+	cost = 60
+	containertype = /obj/structure/closet/crate
+	containername = "heavy crate"
+	group = "Miscellaneous"
+
+
+/datum/supply_packs/exosuit_mod/durand
+	contains = list(
+		/obj/item/device/kit/paint/durand
+		)
+	name = "Durand classic exosuit modkit"
+	cost = 75
+
+/datum/supply_packs/exosuit_mod/durand/seraph
+	contains = list(
+		/obj/item/device/kit/paint/durand/seraph
+		)
+	name = "Durand seraph exosuit modkit"
+	cost = 80
+
+/datum/supply_packs/exosuit_mod/durand/phazon
+	contains = list(
 		/obj/item/device/kit/paint/durand/phazon
 		)
-	name = "Random Durand exosuit modkit"
+	name = "Durand phazon exosuit modkit"
+	cost = 80
 
-/datum/supply_packs/randomised/exosuit_mod/gygax
+/datum/supply_packs/exosuit_mod/gygax
 	contains = list(
-		/obj/item/device/kit/paint/gygax,
-		/obj/item/device/kit/paint/gygax/darkgygax,
+		/obj/item/device/kit/paint/gygax
+		)
+	name = "Gygax classic exosuit modkit"
+	cost = 75
+
+/datum/supply_packs/exosuit_mod/gygax/darkgygax
+	contains = list(
+		/obj/item/device/kit/paint/gygax/darkgygax
+		)
+	name = "Gygax darkgygax exosuit modkit"
+	cost = 80
+
+/datum/supply_packs/exosuit_mod/gygax/recitence
+	contains = list(
 		/obj/item/device/kit/paint/gygax/recitence
 		)
-	name = "Random Gygax exosuit modkit"
+	name = "Gygax recitence exosuit modkit"
+	cost = 80
+
 
 /datum/supply_packs/custom
 	name = "custom pack"

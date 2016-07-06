@@ -71,10 +71,10 @@
 
 	free_space -= length(strip_html_properly(new_text))
 
-/obj/item/weapon/paper/examine(mob/user)
-	..()
-	if(in_range(user, src) || istype(user, /mob/dead/observer))
-		show_content(usr)
+/obj/item/weapon/paper/examine(mob/user, return_dist=1)
+	.=..()
+	if(.<=1 || istype(user, /mob/dead/observer))
+		show_content(user)
 	else
 		user << "<span class='notice'>You have to go closer if you want to read it.</span>"
 	return
@@ -132,8 +132,8 @@
 
 /obj/item/weapon/paper/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	if(user.zone_sel.selecting == "eyes")
-		user.visible_message("<span class='notice'>You show the paper to [M]. </span>", \
-			"<span class='notice'> [user] holds up a paper and shows it to [M]. </span>")
+		user.visible_message("<span class='notice'> [user] holds up a paper and shows it to [M]. </span>",\
+			"<span class='notice'>You show the paper to [M]. </span>")
 		M.examinate(src)
 
 	else if(user.zone_sel.selecting == "mouth") // lipstick wiping
@@ -507,6 +507,20 @@
 /obj/item/weapon/paper/cookies
 	name = "message"
 	info = "<B>Hi this Is 'Tim' at the bakery. The cookies that you ordered should be delivered by now... A list of ingredients are included... Make sure that you read them carefully!</B>"
+
+/obj/item/weapon/paper/CVIT
+	name = "CVIT crew note"
+	icon_state = "paper_words"
+	info = "Aye aye, guys, today you are hauling something very valuable. This is why you are instructed to bring three safes, two of them decoy. Whatever it is you are guarding, it must be very important. No jacking around - as soon as you leave planetary space, you are on your own, `cause we are still lacking licence for armed vessel maneuvers in this sector.  And yeah,  and we`re still playing ball this weekend, Kev, so try and get back in time."
+
+/obj/item/weapon/paper/adminanounce
+	name = "Admnistrative Anouncement"
+	icon_state = "paper_words"
+	info = "It is reported that merely closing down leisure facilities has not been successful. You and your Heads of Staff are to ensure that all crew are working hard, and not wasting time or energy. Any crew caught off duty without leave from their Head of Staff are to be warned, and on repeated offence, to be brigged until the next transfer shuttle arrives, which will take them to facilities where they can be of more use."
+
+/obj/item/weapon/paper/objectives
+	name = "Objective of a Nuclear Operative"
+	info = "<b>Objective #1</b>: Destroy the station with a nuclear device."
 
 /obj/item/weapon/paper/flag
 	icon_state = "flag_neutral"

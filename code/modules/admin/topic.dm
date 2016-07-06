@@ -511,6 +511,26 @@
 
 		jobs += "</tr></table>"
 
+
+	//Species
+		counter = 0
+		jobs += "<table cellpadding='1' cellspacing='0' width='100%'>"
+		jobs += "<tr bgcolor='dddddd'><th colspan='[length(playable_species)-1]'>Species</th></tr><tr align='center'>"
+		for(var/species in playable_species)
+			if(species == "Human")	continue
+			if(jobban_isbanned(M, species))
+				jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=[species];jobban4=\ref[M]'><font color=red>[replacetext(species, " ", "&nbsp")]</font></a></td>"
+				counter++
+			else
+				jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=[species];jobban4=\ref[M]'>[replacetext(species, " ", "&nbsp")]</a></td>"
+				counter++
+
+			if(counter >= 5) //So things dont get squiiiiished!
+				jobs += "</tr><tr align='center'>"
+				counter = 0
+		jobs += "</tr></table>"
+
+
 	//Non-Human (Green)
 		counter = 0
 		jobs += "<table cellpadding='1' cellspacing='0' width='100%'>"
@@ -567,22 +587,13 @@
 
 		//Other races  (BLUE, because I have no idea what other color to make this)
 		jobs += "<table cellpadding='1' cellspacing='0' width='100%'>"
-		jobs += "<tr bgcolor='ccccff'><th colspan='2'>Different stuff</th></tr><tr align='center'>"
+		jobs += "<tr bgcolor='ccccff'><th colspan='4'>Different stuff</th></tr><tr align='center'>"
 
-		if(jobban_isbanned(M, "Dionaea"))
-			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Dionaea;jobban4=\ref[M]'><font color=red>Dionaea</font></a></td>"
-		else
-			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Dionaea;jobban4=\ref[M]'>Dionaea</a></td>"
+		jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Dionaea;jobban4=\ref[M]'><font color=[(jobban_isbanned(M, "Dionaea"))?"red":"blue"]>Dionaea</font></a></td>"
+		jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Drone;jobban4=\ref[M]'><font color=[(jobban_isbanned(M, "Drone"))?"red":"blue"]>Drone</font></a></td>"
+		jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Mouse;jobban4=\ref[M]'><font color=[(jobban_isbanned(M, "Mouse"))?"red":"blue"]>Mouse</font></a></td>"
+		jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Mouse;jobban4=\ref[M]'><font color=[(jobban_isbanned(M, "Name"))?"red":"blue"]>Custom name</font></a></td>"
 
-		if(jobban_isbanned(M, "Drone"))
-			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Drone;jobban4=\ref[M]'><font color=red>Drone</font></a></td>"
-		else
-			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Drone;jobban4=\ref[M]'>Drone</a></td>"
-
-		if(jobban_isbanned(M, "Mouse"))
-			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Mouse;jobban4=\ref[M]'><font color=red>Mouse</font></a></td>"
-		else
-			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Mouse;jobban4=\ref[M]'>Mouse</a></td>"
 
 		jobs += "</tr></table>"
 		body = "<body>[jobs]</body>"
@@ -799,7 +810,7 @@
 		var/mob/M = locate(href_list["newban"])
 		if(!ismob(M)) return
 
-//		if(M.client && M.client.holder)	return	//admins cannot be banned. Even if they could, the ban doesn't affect them anyway
+		if(check_rights(R_ADMIN,0, user = M))	return	//admins cannot be banned. Even if they could, the ban doesn't affect them anyway
 
 		switch(alert("Temporary Ban?",,"Yes","No", "Cancel"))
 			if("Yes")

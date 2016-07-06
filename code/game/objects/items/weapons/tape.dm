@@ -42,12 +42,18 @@
 			user.visible_message("\red <B>[user] is trying to close up [C]'s mouth with [src]!</B>")
 
 			if (ishuman(C))
+				var/can_use = 0
+				for (var/obj/item/weapon/grab/G in C.grabbed_by)
+					if (G.loc == user && G.state >= GRAB_AGGRESSIVE)
+						can_use = 1
+						break
+				if(!can_use) return
 				var/mob/living/carbon/human/H = C
 				if (!H.has_organ_for_slot(slot_wear_mask))
 					in_action = 0
 					return
 
-				spawn(8)
+				spawn(12)
 					if(!C)
 						in_action = 0
 						return
@@ -83,8 +89,8 @@
 	..()
 	flags |= NOBLUDGEON
 
-/obj/item/weapon/ducttape/examine(mob/user)
-	return stuck.examine(user)
+/obj/item/weapon/ducttape/examine(mob/user, return_dist = 0)
+	return stuck.examine(user, return_dist)
 
 /obj/item/weapon/ducttape/proc/attach(var/obj/item/weapon/W)
 	stuck = W
@@ -98,7 +104,7 @@
 		return
 
 	user << "You remove \the [initial(name)] from [stuck]."
-	
+
 	user.drop_from_inventory(src)
 	stuck.forceMove(get_turf(src))
 	user.put_in_hands(stuck)

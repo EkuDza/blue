@@ -27,7 +27,7 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 #define BE_ASSISTANT 1
 #define RETURN_TO_LOBBY 2
 
-datum/preferences
+/datum/preferences
 	//doohickeys for savefiles
 	var/path
 	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
@@ -556,7 +556,9 @@ datum/preferences
 	dat += "</table><center><hr/>"
 
 	var/restricted = 0
-	if(config.usealienwhitelist) //If we're using the whitelist, make sure to check it!
+	if(jobban_isbanned(user, current_species.name))
+		restricted = 1
+	else if(config.usealienwhitelist) //If we're using the whitelist, make sure to check it!
 		if(!(current_species.flags & CAN_JOIN))
 			restricted = 2
 		else if((current_species.flags & IS_WHITELISTED) && !is_alien_whitelisted(user,current_species))
@@ -624,7 +626,7 @@ datum/preferences
 	HTML += "<a href ='byond://?src=\ref[user];preference=flavour_text_robot;task=Default'>Default:</a> "
 	HTML += TextPreview(cp1251_to_utf8(flavour_texts_robot["Default"]))
 	HTML += "<hr />"
-	for(var/module in robot_module_types)
+	for(var/module in robot_modules)
 		HTML += "<a href='byond://?src=\ref[user];preference=flavour_text_robot;task=[module]'>[module]:</a> "
 		HTML += TextPreview(cp1251_to_utf8(flavour_texts_robot[module]))
 		HTML += "<br>"
@@ -705,7 +707,6 @@ datum/preferences
 			job_civilian_low &= ~job.flag
 		else
 			job_civilian_low |= job.flag
-		SetChoices(user)
 		return 1
 
 	if(GetJobDepartment(job, 1) & job.flag)
@@ -716,8 +717,6 @@ datum/preferences
 		SetJobDepartment(job, 3)
 	else//job = Never
 		SetJobDepartment(job, 4)
-
-	SetChoices(user)
 	return 1
 
 /datum/preferences/proc/ResetJobs()
@@ -770,6 +769,7 @@ datum/preferences
 			job_civilian_high = 0
 			job_medsci_high = 0
 			job_engsec_high = 0
+			req_update_icon = 1
 			high_job_title = ""
 			return 1
 		if(2)//Set current highs to med, then reset them
@@ -779,6 +779,7 @@ datum/preferences
 			job_civilian_high = 0
 			job_medsci_high = 0
 			job_engsec_high = 0
+			req_update_icon = 1
 			high_job_title = job.title
 
 	switch(job.department_flag)
@@ -851,7 +852,8 @@ datum/preferences
 						SetPlayerAltTitle(job, choice)
 						SetChoices(user)
 			if("input")
-				SetJob(user, href_list["text"])
+				if(SetJob(user, href_list["text"]))
+					spawn SetChoices(user)
 			else
 				SetChoices(user)
 		return 1
@@ -1167,9 +1169,11 @@ datum/preferences
 						b_type = new_b_type
 
 				if("hair")
-					if(species == "Human" || species == "Unathi" || species == "Tajara" || species == "Skrell")
+					var/datum/sprite_accessory/H = hair_styles_list[h_style]
+					if(H.do_colouration)
 						var/new_hair = input(user, "Choose your character's hair colour:", "Character Preference", hair_color) as color|null
-						if(new_hair)
+						if(new_hair && new_hair!=hair_color)
+							req_update_icon = 1
 							hair_color = new_hair
 
 				if("h_style")
@@ -1496,7 +1500,7 @@ datum/preferences
 
 				if("UIalpha")
 					var/UI_style_alpha_new = input(user, "Select a new alpha(transparence) parametr for UI, between 50 and 255") as num
-					if(!UI_style_alpha_new | !(UI_style_alpha_new <= 255 && UI_style_alpha_new >= 50)) return
+					if(!UI_style_alpha_new || UI_style_alpha_new > 255 || UI_style_alpha_new < 50) return
 					UI_style_alpha = UI_style_alpha_new
 
 				if("be_special")
@@ -1549,7 +1553,7 @@ datum/preferences
 	return 1
 
 /datum/preferences/proc/copy_to(mob/living/carbon/human/character, safety = 0)
-	if(random_name)
+	if(random_name || jobban_isbanned(usr, "Name"))
 		real_name = random_name(gender,species)
 
 	var/firstspace = findtext(real_name, " ")

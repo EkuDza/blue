@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 /obj/item/weapon/reagent_containers/glass
 	name = " "
-	var/base_name = " "
+	var/base_name = ""
 	desc = " "
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "null"
@@ -91,51 +91,59 @@
 		playsound(user.loc, 'sound/items/drink.ogg', rand(10, 50), 1)
 
 	bullet_act(var/obj/item/projectile/bullet/Proj)
-		if(!isGlass)
-			visible_message("<span class = 'warning'>Bullet flies through the [src], splashing it's contents all around!</span>")
-
-			var/obj/item/weapon/pierced_container/B = new /obj/item/weapon/pierced_container/(loc)
-			B.name = "spoiled [name]"
-			B.force = src.force
-			B.icon_state = src.icon_state
-			B.item_state = src.item_state
-
-			var/icon/Q = new(src.icon, B.icon_state)
-			Q.Blend(B.hole, ICON_OVERLAY, rand(2), 1)
-			B.icon = Q
-			src.transfer_fingerprints_to(B)
-		else
-			isGlass = 0
-			visible_message("<span class = 'warning'>The [src] explodes in the shower of shards!</span>")
-
-			var/obj/item/weapon/broken_bottle/B = new /obj/item/weapon/broken_bottle(loc)
-			B.name = "broken [name]"
-			B.force = src.force
-			B.icon_state = src.icon_state
-
-			if(istype(src, /obj/item/weapon/reagent_containers/glass/drinks/drinkingglass))
-				B.icon_state = "glass_empty"
-
-			var/icon/Q = new(src.icon, B.icon_state)
-			Q.Blend(B.broken_outline, ICON_OVERLAY, rand(5), 1)
-			Q.SwapColor(rgb(255, 0, 220, 255), rgb(0, 0, 0, 0))
-			B.icon = Q
-			src.transfer_fingerprints_to(B)
-
-			playsound(src, "shatter", 70, 1)
-
-			if(prob(66))
-				new /obj/item/weapon/material/shard(src.loc)
+		..()
 
 		if(reagents && reagents.total_volume)
 			reagents.splash(src.loc, reagents.total_volume)
 
-			qdel(src)
+		if(!isGlass)
+			visible_message("<span class = 'warning'>Bullet flies through the [src], splashing it's contents all around!</span>")
+
+			var/obj/item/weapon/pierced_container/B = new(loc)
+			B.name = "spoiled [name]"
+			B.force = src.force
+			B.icon = icon
+			B.icon_state = src.icon_state
+			B.item_state = src.item_state
+			B.pixel_x = pixel_x
+			B.pixel_y = pixel_y
+			var/image/hole = image('icons/effects/effects.dmi', "scorch")
+			hole.pixel_x = rand(-1,1)+15+pixel_x
+			hole.pixel_y = rand(-4,4)+15+pixel_y
+			B.overlays += hole
+		else
+			isGlass = 0
+			visible_message("<span class = 'warning'>The [src] explodes in the shower of shards!</span>")
+
+			var/obj/item/weapon/broken_bottle/B = new(loc)
+			B.name = "broken [name]"
+			B.force = src.force
+			B.icon_state = src.icon_state
+			var/icon/Q = new(src.icon, B.icon_state)
+			Q.Blend(B.broken_outline, ICON_OVERLAY, rand(5), 1)
+			Q.SwapColor(rgb(255, 0, 220, 255), rgb(0, 0, 0, 0))
+			B.icon = Q
+			B.pixel_x = pixel_x
+			B.pixel_y = pixel_y
+			src.transfer_fingerprints_to(B)
+
+			playsound(src, "shatter", 70, 1)
+			if(prob(66))
+				new /obj/item/weapon/material/shard(src.loc)
+
+		qdel(src)
 
 	throw_impact(var/atom/hit_atom)
-		if(isGlass)
-
+		..()
+		if(isGlass && prob(30))
 			visible_message("<span class = 'warning'>The [src] explodes in the shower of shards!</span>")
+
+			if(reagents && reagents.total_volume)
+				if(isliving(hit_atom))
+					visible_message("<span class = 'warning'>The soluton splashes all over the [hit_atom]!</span>")
+					reagents.splash(hit_atom, reagents.total_volume)
+				else
+					reagents.splash(hit_atom, reagents.total_volume)
 
 			//create new broken bottle
 			var/obj/item/weapon/broken_bottle/B = new /obj/item/weapon/broken_bottle(loc)
@@ -143,9 +151,6 @@
 			B.icon_state = src.icon_state
 
 			src.transfer_fingerprints_to(B)
-
-			if(reagents && reagents.total_volume)
-				reagents.splash(hit_atom, reagents.total_volume)
 
 			var/icon/Q = new(src.icon, B.icon_state)
 			Q.Blend(B.broken_outline, ICON_OVERLAY, rand(5), 1)
@@ -169,7 +174,6 @@
 	throw_speed = 3
 	throw_range = 5
 	item_state = "cola"
-	var/icon/hole = icon('icons/obj/drinks.dmi', "hole")
 
 
 /obj/item/weapon/reagent_containers/glass/beaker
@@ -186,15 +190,15 @@
 		base_name = name
 		desc += " Can hold up to [volume] units."
 
-	examine(var/mob/user)
-		if(!..(user, 2))
-			return
-		if(reagents && reagents.reagent_list.len)
-			user << "<span class='notice'>It contains [reagents.total_volume] units of liquid.</span>"
-		else
-			user << "<span class='notice'>It is empty.</span>"
-		if(!is_open_container())
-			user << "<span class='notice'>Airtight lid seals it completely.</span>"
+	examine(var/mob/user, return_dist=1)
+		.=..()
+		if(.<=2)
+			if(reagents && reagents.reagent_list.len)
+				user << "<span class='notice'>It contains [reagents.total_volume] units of liquid.</span>"
+			else
+				user << "<span class='notice'>It is empty.</span>"
+			if(!is_open_container())
+				user << "<span class='notice'>Airtight lid seals it completely.</span>"
 
 	on_reagent_change()
 		update_icon()

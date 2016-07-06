@@ -88,6 +88,8 @@
 	S["default_slot"]		<< default_slot
 	S["toggles"]			<< toggles
 	S["chat_toggles"]		<< chat_toggles
+	S["UI_style_color"]		<< UI_style_color
+	S["UI_style_alpha"]		<< UI_style_alpha
 
 	return 1
 
@@ -150,7 +152,7 @@
 
 	//Flavour text for robots.
 	S["flavour_texts_robot_Default"] >> flavour_texts_robot["Default"]
-	for(var/module in robot_module_types)
+	for(var/module in robot_modules)
 		S["flavour_texts_robot_[module]"] >> flavour_texts_robot[module]
 
 	var/mod_id = "nothing"
@@ -180,9 +182,6 @@
 
 	S["uplinklocation"] >> uplinklocation
 	S["exploit_record"]	>> exploit_record
-
-	S["UI_style_color"]		<< UI_style_color
-	S["UI_style_alpha"]		<< UI_style_alpha
 
 	//Sanitize
 	real_name		= sanitizeName(real_name)
@@ -289,7 +288,7 @@
 
 	//Flavour text for robots.
 	S["flavour_texts_robot_Default"] << flavour_texts_robot["Default"]
-	for(var/module in robot_module_types)
+	for(var/module in robot_modules)
 		S["flavour_texts_robot_[module]"] << flavour_texts_robot[module]
 
 	//Miscellaneous
@@ -313,9 +312,6 @@
 
 	S["uplinklocation"] << uplinklocation
 	S["exploit_record"]	<< exploit_record
-
-	S["UI_style_color"]		<< UI_style_color
-	S["UI_style_alpha"]		<< UI_style_alpha
 
 	return 1
 

@@ -62,8 +62,9 @@ var/global/list/obj/item/device/pda/PDAs = list()
 
 	var/obj/item/device/paicard/pai = null	// A slot for a personal AI device
 
-/obj/item/device/pda/examine(mob/user)
-	if(..(user, 1))
+/obj/item/device/pda/examine(mob/user, return_dist = 1)
+	. = ..()
+	if(.<=1)
 		user << "The time [worldtime2text()] is displayed in the corner of the screen."
 
 /obj/item/device/pda/medical
@@ -214,6 +215,9 @@ var/global/list/obj/item/device/pda/PDAs = list()
 /obj/item/device/pda/geneticist
 	default_cartridge = /obj/item/weapon/cartridge/medical
 	icon_state = "pda-gene"
+
+/obj/item/device/pda/chrome
+	icon_state = "pda_chrome"
 
 
 // Special AI/pAI PDAs that cannot explode.

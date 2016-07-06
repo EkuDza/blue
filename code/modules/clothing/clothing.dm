@@ -104,39 +104,28 @@
 	throwforce = 2
 	slot_flags = SLOT_EARS
 
-/obj/item/clothing/ears/attack_hand(mob/user as mob)
-	if (!user) return
+/obj/item/clothing/ears/equipped(mob/user, slot)
+	..()
+	if(slot_flags & SLOT_TWOEARS)
+		var/mob/living/carbon/human/H = loc
+		if(istype(H))
+			if(slot == slot_l_ear)
+				H.equip_to_slot(new /obj/item/clothing/ears/offear(src), slot_r_ear, 0)
+			else if(slot == slot_r_ear)
+				H.equip_to_slot(new /obj/item/clothing/ears/offear(src), slot_l_ear, 0)
 
-	if (src.loc != user || !istype(user,/mob/living/carbon/human))
-		..()
-		return
+/obj/item/clothing/ears/dropped(mob/user as mob)
+	..()
+	if(slot_flags & SLOT_TWOEARS)
+		var/mob/living/carbon/human/H = user
+		var/obj/item/clothing/ears/offear/Other = null
 
-	var/mob/living/carbon/human/H = user
-	if(H.l_ear != src && H.r_ear != src)
-		..()
-		return
+		if(H.l_ear && istype(H.l_ear, /obj/item/clothing/ears/offear))
+			Other = H.l_ear
+		else if(H.r_ear && istype(H.r_ear, /obj/item/clothing/ears/offear))
+			Other = H.r_ear
 
-	if(!canremove)
-		return
-
-	var/obj/item/clothing/ears/O
-	if(slot_flags & SLOT_TWOEARS )
-		O = (H.l_ear == src ? H.r_ear : H.l_ear)
-		user.u_equip(O)
-		if(!istype(src,/obj/item/clothing/ears/offear))
-			qdel(O)
-			O = src
-	else
-		O = src
-
-	user.u_equip(src)
-
-	if (O)
-		user.put_in_hands(O)
-		O.add_fingerprint(user)
-
-	if(istype(src,/obj/item/clothing/ears/offear))
-		qdel(src)
+		if(Other) H.unEquip(Other)
 
 /obj/item/clothing/ears/update_clothing_icon()
 	if (ismob(src.loc))
@@ -148,21 +137,27 @@
 	w_class = 5.0
 	icon = 'icons/mob/screen1_Midnight.dmi'
 	icon_state = "block"
-	slot_flags = SLOT_EARS | SLOT_TWOEARS
+	slot_flags = SLOT_EARS
+	var/obj/item/clothing/ears/origin = null
 
 	New(var/obj/O)
 		name = O.name
 		desc = O.desc
 		icon = O.icon
 		icon_state = O.icon_state
+		origin = O
 		set_dir(O.dir)
 
-/obj/item/clothing/ears/earmuffs
-	name = "earmuffs"
-	desc = "Protects your hearing from loud noises, and quiet ones as well."
-	icon_state = "earmuffs"
-	item_state = "earmuffs"
-	slot_flags = SLOT_EARS | SLOT_TWOEARS
+	attack_hand(user)
+		return origin.attack_hand(user)
+
+	dropped(mob/user)
+		..()
+		var/mob/living/carbon/human/H = user
+		if(H.l_ear == origin || H.r_ear == origin)
+			H.remove_from_mob(origin)
+		qdel(src)
+		return
 
 ///////////////////////////////////////////////////////////////////////
 //Glasses
@@ -466,17 +461,18 @@ BLIND     // can't see anything
 				usr.put_in_l_hand(src)
 		src.add_fingerprint(usr)
 
-/obj/item/clothing/under/examine(mob/user)
-	..(user)
-	switch(src.sensor_mode)
-		if(0)
-			user << "Its sensors appear to be disabled."
-		if(1)
-			user << "Its binary life sensors appear to be enabled."
-		if(2)
-			user << "Its vital tracker appears to be enabled."
-		if(3)
-			user << "Its vital tracker and tracking beacon appear to be enabled."
+/obj/item/clothing/under/examine(mob/user, return_dist=1)
+	.=..()
+	if(.<=1)
+		switch(src.sensor_mode)
+			if(0)
+				user << "Its sensors appear to be disabled."
+			if(1)
+				user << "Its binary life sensors appear to be enabled."
+			if(2)
+				user << "Its vital tracker appears to be enabled."
+			if(3)
+				user << "Its vital tracker and tracking beacon appear to be enabled."
 	if(accessories.len)
 		for(var/obj/item/clothing/accessory/A in accessories)
 			user << "\A [A] is attached to it."

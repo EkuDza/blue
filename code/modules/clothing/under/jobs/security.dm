@@ -76,6 +76,10 @@
 	icon_state = "polsuit"
 	item_state = "sl_suit"
 
+/obj/item/clothing/under/det/seven
+	icon_state = "detsuit_black"
+	item_state = "sl_suit"
+
 /obj/item/clothing/under/rank/forentech
 	name = "red forensic technician suit"
 	desc = "Someone who wears this means business."
@@ -106,6 +110,11 @@
 /obj/item/clothing/under/rank/head_of_security/corp
 	icon_state = "hos_corporate"
 	item_state = "bl_suit"
+
+/obj/item/clothing/under/rank/head_of_security/solyarkin
+	desc = "Better you do not meet the person who wears it."
+	icon_state = "commi"
+	item_state = "commi"
 
 //Jensen cosplay gear
 /obj/item/clothing/under/rank/head_of_security/jensen
