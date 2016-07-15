@@ -13,9 +13,9 @@ var/list/organ_cache = list()
 	var/min_bruised_damage = 10
 	var/min_broken_damage = 30
 	var/max_damage
-	var/organ_tag = "organ"
 
 	var/parent_organ = "chest"
+	var/obj/item/organ/external/parent
 	var/robotic = 0 //For being a robot
 	var/rejecting   // Is this organ already being rejected?
 
@@ -25,49 +25,49 @@ var/list/organ_cache = list()
 									  // links chemical IDs to number of ticks for which they'll stay in the blood
 	germ_level = 0
 
-/obj/item/organ/Destroy()
-	if(!owner)
-		return ..()
-
-	if(istype(owner, /mob/living/carbon))
-		if((owner.internal_organs) && (src in owner.internal_organs))
-			owner.internal_organs -= src
-		if(istype(owner, /mob/living/carbon/human))
-			if((owner.internal_organs_by_name) && (src in owner.internal_organs_by_name))
-				owner.internal_organs_by_name -= src
-			if((owner.organs) && (src in owner.organs))
-				owner.organs -= src
-			if((owner.organs_by_name) && (src in owner.organs_by_name))
-				owner.organs_by_name -= src
-	if(src in owner.contents)
-		owner.contents -= src
-
-	return ..()
-
 /obj/item/organ/proc/update_health()
 	return
 
-/obj/item/organ/New(var/mob/living/carbon/holder, var/internal)
+/obj/item/organ/New(var/mob/living/carbon/human/holder)
 	..(holder)
 	create_reagents(5)
 	if(!max_damage)
 		max_damage = min_broken_damage * 2
 	if(istype(holder))
-		src.owner = holder
-		var/mob/living/carbon/human/H = holder
-		if(istype(H))
-			if(internal)
-				var/obj/item/organ/external/E = H.organs_by_name[src.parent_organ]
-				if(E)
-					if(E.internal_organs == null)
-						E.internal_organs = list()
-					E.internal_organs |= src
-			if(H.dna)
-				if(!blood_DNA)
-					blood_DNA = list()
-				blood_DNA[H.dna.unique_enzymes] = H.dna.b_type
-		if(internal)
-			holder.internal_organs |= src
+		install(holder)
+
+// Move organ inside new owner and attach it.
+/obj/item/organ/proc/install(var/mob/living/carbon/human/H)
+	if(!istype(H)) return 1
+
+	owner = H
+	forceMove(owner)
+
+	if(H.dna)
+		if(!blood_DNA)
+			blood_DNA = list()
+		blood_DNA[H.dna.unique_enzymes] = H.dna.b_type
+	processing_objects -= src
+
+/obj/item/organ/proc/removed(var/mob/living/user)
+	if(!owner) return
+
+	processing_objects |= src
+	rejecting = null
+
+	var/datum/reagent/blood/organ_blood = locate(/datum/reagent/blood) in reagents.reagent_list
+	if(!organ_blood || !organ_blood.data["blood_DNA"])
+		owner.vessel.trans_to(src, 5, 1, 1)
+
+	if(vital)
+		if(user)
+			user.attack_log += "\[[time_stamp()]\]<font color='red'> removed a vital organ ([src]) from [owner.name] ([owner.ckey]) (INTENT: [uppertext(user.a_intent)])</font>"
+			owner.attack_log += "\[[time_stamp()]\]<font color='orange'> had a vital organ ([src]) removed by [user.name] ([user.ckey]) (INTENT: [uppertext(user.a_intent)])</font>"
+			msg_admin_attack("[user.name] ([user.ckey]) removed a vital organ ([src]) from [owner.name] ([owner.ckey]) (INTENT: [uppertext(user.a_intent)]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
+		owner.death()
+
+	loc = owner.loc
+	owner = null
 
 /obj/item/organ/proc/die()
 	if(status & ORGAN_ROBOT)
@@ -135,7 +135,7 @@ var/list/organ_cache = list()
 	// Process unsuitable transplants. TODO: consider some kind of
 	// immunosuppressant that changes transplant data to make it match.
 	if(transplant_data)
-		if(!rejecting && prob(20) && owner.dna && blood_incompatible(transplant_data["blood_type"],owner.dna.b_type,owner.species,transplant_data["species"]))
+		if(!rejecting && transplant_data && prob(20) && owner.dna && blood_incompatible(transplant_data["blood_type"],owner.dna.b_type,transplant_data["species"],owner.species))
 			rejecting = 1
 		else
 			rejecting++ //Rejection severity increases over time.
@@ -236,88 +236,27 @@ var/list/organ_cache = list()
 		if(0)
 			return
 		if(1)
-			switch (severity)
-				if (1.0)
+			switch(severity)
+				if(1.0)
 					take_damage(20,0)
 					return
-				if (2.0)
+				if(2.0)
 					take_damage(7,0)
 					return
 				if(3.0)
 					take_damage(3,0)
 					return
 		if(2)
-			switch (severity)
-				if (1.0)
+			switch(severity)
+				if(1.0)
 					take_damage(40,0)
 					return
-				if (2.0)
+				if(2.0)
 					take_damage(15,0)
 					return
 				if(3.0)
 					take_damage(10,0)
 					return
-
-/obj/item/organ/proc/removed(var/mob/living/user)
-
-	if(!istype(owner))
-		return
-
-	owner.internal_organs_by_name[organ_tag] = null
-	owner.internal_organs_by_name -= organ_tag
-	owner.internal_organs_by_name -= null
-	owner.internal_organs -= src
-
-	var/obj/item/organ/external/affected = owner.get_organ(parent_organ)
-	if(affected) affected.internal_organs -= src
-
-	loc = get_turf(owner)
-	processing_objects |= src
-	rejecting = null
-	var/datum/reagent/blood/organ_blood = locate(/datum/reagent/blood) in reagents.reagent_list
-	if(!organ_blood || !organ_blood.data["blood_DNA"])
-		owner.vessel.trans_to(src, 5, 1, 1)
-
-	if(owner && vital)
-		if(user)
-			user.attack_log += "\[[time_stamp()]\]<font color='red'> removed a vital organ ([src]) from [owner.name] ([owner.ckey]) (INTENT: [uppertext(user.a_intent)])</font>"
-			owner.attack_log += "\[[time_stamp()]\]<font color='orange'> had a vital organ ([src]) removed by [user.name] ([user.ckey]) (INTENT: [uppertext(user.a_intent)])</font>"
-			msg_admin_attack("[user.name] ([user.ckey]) removed a vital organ ([src]) from [owner.name] ([owner.ckey]) (INTENT: [uppertext(user.a_intent)]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
-		owner.death()
-
-	owner = null
-
-/obj/item/organ/proc/replaced(var/mob/living/carbon/human/target,var/obj/item/organ/external/affected)
-
-	if(!istype(target)) return
-
-	var/datum/reagent/blood/transplant_blood = locate(/datum/reagent/blood) in reagents.reagent_list
-	transplant_data = list()
-	if(!transplant_blood)
-		transplant_data["species"] =    target.species.name
-		transplant_data["blood_type"] = target.dna.b_type
-		transplant_data["blood_DNA"] =  target.dna.unique_enzymes
-	else
-		transplant_data["species"] =    transplant_blood.data["species"]
-		transplant_data["blood_type"] = transplant_blood.data["blood_type"]
-		transplant_data["blood_DNA"] =  transplant_blood.data["blood_DNA"]
-
-	owner = target
-	loc = owner
-	processing_objects -= src
-	target.internal_organs |= src
-	affected.internal_organs |= src
-	target.internal_organs_by_name[organ_tag] = src
-	if(robotic)
-		status |= ORGAN_ROBOT
-
-/obj/item/organ/eyes/replaced(var/mob/living/carbon/human/target)
-
-	// Apply our eye colour to the target.
-	if(istype(target) && eye_colour)
-		target.eyes_color = eye_colour
-		target.update_eyes()
-	..()
 
 /obj/item/organ/proc/bitten(mob/user)
 
